@@ -11,27 +11,27 @@ AI.init = function (pace) {
     AI.number = 0;
     AI.setHistoryTable.lenght = 0;
 
-    var val = AI.getAlphaBeta(-99999, 99999, AI.treeDepth, com.arr2Clone(player.map), player.my);
-    //var val = AI.iterativeSearch(com.arr2Clone(player.map),player.my)
+    var val = AI.getAlphaBeta(-99999, 99999, AI.treeDepth, rule.arr2Clone(player1.map), player1.my);
+    //var val = AI.iterativeSearch(com.arr2Clone(player1.map),player1.my)
     if (!val || val.value == -8888) {
         AI.treeDepth = 4;
-        val = AI.getAlphaBeta(-99999, 99999, AI.treeDepth, com.arr2Clone(player.map), player.my);
+        val = AI.getAlphaBeta(-99999, 99999, AI.treeDepth, rule.arr2Clone(player1.map), player1.my);
     }
-    //var val = AI.iterativeSearch(com.arr2Clone(player.map),player.my);
+    //var val = AI.iterativeSearch(com.arr2Clone(player1.map),player1.my);
     if (val && val.value != -8888) {
-        var man = player.mans[val.key];
+        var man = player1.mans[val.key];
         var nowTime = new Date().getTime();
-        AI.move = com.createMove(com.arr2Clone(player.map), man.x, man.y, val.x, val.y);
-        com.get("moveInfo").innerHTML = '<h3>AI搜索结果：</h3>最佳着法：' +
+        AI.move = rule.createMove(rule.arr2Clone(player1.map), man.x, man.y, val.x, val.y);
+        rule.get("moveInfo").innerHTML = '<h3>AI搜索结果：</h3>最佳着法：' +
             AI.move +
             '<br />搜索深度：' + AI.treeDepth + '<br />搜索分支：' +
             AI.number + '个 <br />最佳着法评估：' +
             val.value + '分' +
             ' <br />搜索用时：' +
             (nowTime - initTime) + '毫秒';
-        temp = com.get("info").textContent;
-        if(player.my == -1) com.get("info").innerHTML = temp + '\n' + '黑：' + AI.move;
-        else com.get("info").innerHTML = temp + '\n' + '红：' + AI.move;
+        temp = rule.get("info").textContent;
+        if(player1.my == -1) rule.get("info").innerHTML = temp + '\n' + '黑：' + AI.move;
+        else rule.get("info").innerHTML = temp + '\n' + '红：' + AI.move;
         return [man.x, man.y, val.x, val.y];
     } else {
         return false;
@@ -64,10 +64,10 @@ AI.getMapAllMan = function (map, my) {
     for (var i = 0; i < map.length; i++) {
         for (var n = 0; n < map[i].length; n++) {
             var key = map[i][n];
-            if (key && player.mans[key].my == my) {
-                player.mans[key].x = n;
-                player.mans[key].y = i;
-                mans.push(player.mans[key])
+            if (key && player1.mans[key].my == my) {
+                player1.mans[key].x = n;
+                player1.mans[key].y = i;
+                mans.push(player1.mans[key])
             }
         }
     }
@@ -78,7 +78,7 @@ AI.getMapAllMan = function (map, my) {
 AI.getMoves = function (map, my) {
     var manArr = AI.getMapAllMan(map, my);
     var moves = [];
-    var foul = player.isFoul;
+    var foul = player1.isFoul;
     for (var i = 0; i < manArr.length; i++) {
         var man = manArr[i];
         var val = man.bl(map);
@@ -123,17 +123,17 @@ AI.getAlphaBeta = function (A, B, depth, map, my) {
 
         map[newY][newX] = key;
         delete map[oldY][oldX];
-        player.mans[key].x = newX;
-        player.mans[key].y = newY;
+        player1.mans[key].x = newX;
+        player1.mans[key].y = newY;
 
         if (clearKey == "j0" || clearKey == "J0") {//被吃老将,撤消这个走法;
-            player.mans[key].x = oldX;
-            player.mans[key].y = oldY;
+            player1.mans[key].x = oldX;
+            player1.mans[key].y = oldY;
             map[oldY][oldX] = key;
             delete map[newY][newX];
             if (clearKey) {
                 map[newY][newX] = clearKey;
-                // player.mans[ clearKey ].isShow = false;
+                // player1.mans[ clearKey ].isShow = false;
             }
 
             return { "key": key, "x": newX, "y": newY, "value": 8888 };
@@ -143,13 +143,13 @@ AI.getAlphaBeta = function (A, B, depth, map, my) {
             //val = val || val.value;
 
             //撤消这个走法;　
-            player.mans[key].x = oldX;
-            player.mans[key].y = oldY;
+            player1.mans[key].x = oldX;
+            player1.mans[key].y = oldY;
             map[oldY][oldX] = key;
             delete map[newY][newX];
             if (clearKey) {
                 map[newY][newX] = clearKey;
-                //player.mans[ clearKey ].isShow = true;
+                //player1.mans[ clearKey ].isShow = true;
             }
             if (val >= B) {
                 //将这个走法记录到历史表中;
@@ -189,7 +189,7 @@ AI.evaluate = function (map, my) {
         for (var n = 0; n < map[i].length; n++) {
             var key = map[i][n];
             if (key) {
-                val += player.mans[key].value[i][n] * player.mans[key].my;
+                val += player1.mans[key].value[i][n] * player1.mans[key].my;
             }
         }
     }
