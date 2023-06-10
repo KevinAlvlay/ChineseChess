@@ -1,37 +1,37 @@
-﻿var AI = AI || {};
+﻿var Ai = Ai || {};
 
-AI.historyTable = {};		//历史表
+Ai.historyTable = {};		//历史表
 
 //人工智能初始化
-AI.init = function (pace) {
-    AI.move;
+Ai.init = function (pace) {
+    Ai.move;
     var initTime = new Date().getTime();
-    AI.treeDepth = 4;
+    Ai.treeDepth = 4;
 
-    AI.number = 0;
-    AI.setHistoryTable.lenght = 0;
+    Ai.number = 0;
+    Ai.setHistoryTable.lenght = 0;
 
-    var val = AI.getAlphaBeta(-99999, 99999, AI.treeDepth, rule.arr2Clone(player1.map), player1.my);
-    //var val = AI.iterativeSearch(com.arr2Clone(player1.map),player1.my)
+    var val = Ai.getAlphaBeta(-99999, 99999, Ai.treeDepth, rule.arr2Clone(player1.map), player1.my);
+    //var val = Ai.iterativeSearch(com.arr2Clone(player1.map),player1.my)
     if (!val || val.value == -8888) {
-        AI.treeDepth = 4;
-        val = AI.getAlphaBeta(-99999, 99999, AI.treeDepth, rule.arr2Clone(player1.map), player1.my);
+        Ai.treeDepth = 4;
+        val = Ai.getAlphaBeta(-99999, 99999, Ai.treeDepth, rule.arr2Clone(player1.map), player1.my);
     }
-    //var val = AI.iterativeSearch(com.arr2Clone(player1.map),player1.my);
+    //var val = Ai.iterativeSearch(com.arr2Clone(player1.map),player1.my);
     if (val && val.value != -8888) {
         var man = player1.mans[val.key];
         var nowTime = new Date().getTime();
-        AI.move = rule.createMove(rule.arr2Clone(player1.map), man.x, man.y, val.x, val.y);
+        Ai.move = rule.createMove(rule.arr2Clone(player1.map), man.x, man.y, val.x, val.y);
         rule.get("moveInfo").innerHTML = '<h3>AI搜索结果：</h3>最佳着法：' +
-            AI.move +
-            '<br />搜索深度：' + AI.treeDepth + '<br />搜索分支：' +
-            AI.number + '个 <br />最佳着法评估：' +
+            Ai.move +
+            '<br />搜索深度：' + Ai.treeDepth + '<br />搜索分支：' +
+            Ai.number + '个 <br />最佳着法评估：' +
             val.value + '分' +
             ' <br />搜索用时：' +
             (nowTime - initTime) + '毫秒';
         temp = rule.get("info").textContent;
-        if(player1.my == -1) rule.get("info").innerHTML = temp + '\n' + '黑：' + AI.move;
-        else rule.get("info").innerHTML = temp + '\n' + '红：' + AI.move;
+        if(player1.my == -1) rule.get("info").innerHTML = temp + '\n' + '黑：' + Ai.move;
+        else rule.get("info").innerHTML = temp + '\n' + '红：' + Ai.move;
         return [man.x, man.y, val.x, val.y];
     } else {
         return false;
@@ -39,18 +39,18 @@ AI.init = function (pace) {
 }
 
 //迭代加深搜索着法
-AI.iterativeSearch = function (map, my) {
+Ai.iterativeSearch = function (map, my) {
     var timeOut = 100;
     var initDepth = 1;
     var maxDepth = 8;
-    AI.treeDepth = 0;
+    Ai.treeDepth = 0;
     var initTime = new Date().getTime();
     var val = {};
     for (var i = initDepth; i <= maxDepth; i++) {
         var nowTime = new Date().getTime();
-        AI.treeDepth = i;
-        AI.aotuDepth = i;
-        var val = AI.getAlphaBeta(-99999, 99999, AI.treeDepth, map, my)
+        Ai.treeDepth = i;
+        Ai.aotuDepth = i;
+        var val = Ai.getAlphaBeta(-99999, 99999, Ai.treeDepth, map, my)
         if (nowTime - initTime > timeOut) {
             return val;
         }
@@ -59,7 +59,7 @@ AI.iterativeSearch = function (map, my) {
 }
 
 //取得棋盘上所有棋子
-AI.getMapAllMan = function (map, my) {
+Ai.getMapAllMan = function (map, my) {
     var mans = [];
     for (var i = 0; i < map.length; i++) {
         for (var n = 0; n < map[i].length; n++) {
@@ -75,8 +75,8 @@ AI.getMapAllMan = function (map, my) {
 }
 
 //取得棋谱所有己方棋子的着法
-AI.getMoves = function (map, my) {
-    var manArr = AI.getMapAllMan(map, my);
+Ai.getMoves = function (map, my) {
+    var manArr = Ai.getMapAllMan(map, my);
     var moves = [];
     var foul = player1.isFoul;
     for (var i = 0; i < manArr.length; i++) {
@@ -97,16 +97,16 @@ AI.getMoves = function (map, my) {
     return moves;
 }
 //A:当前棋手value/B:对手value/depth：层级
-AI.getAlphaBeta = function (A, B, depth, map, my) {
+Ai.getAlphaBeta = function (A, B, depth, map, my) {
     //var txtMap= map.join();
-    //var history=AI.historyTable[txtMap];
-    //	if (history && history.depth >= AI.treeDepth-depth+1){
+    //var history=Ai.historyTable[txtMap];
+    //	if (history && history.depth >= Ai.treeDepth-depth+1){
     //		return 	history.value*my;
     //}
     if (depth == 0) {
-        return { "value": AI.evaluate(map, my) }; //局面评价函数;
+        return { "value": Ai.evaluate(map, my) }; //局面评价函数;
     }
-    var moves = AI.getMoves(map, my); //生成全部走法;
+    var moves = Ai.getMoves(map, my); //生成全部走法;
     //这里排序以后会增加效率
 
     for (var i = 0; i < moves.length; i++) {
@@ -139,7 +139,7 @@ AI.getAlphaBeta = function (A, B, depth, map, my) {
             return { "key": key, "x": newX, "y": newY, "value": 8888 };
             //return rootKey;
         } else {
-            var val = -AI.getAlphaBeta(-B, -A, depth - 1, map, -my).value;
+            var val = -Ai.getAlphaBeta(-B, -A, depth - 1, map, -my).value;
             //val = val || val.value;
 
             //撤消这个走法;　
@@ -153,18 +153,18 @@ AI.getAlphaBeta = function (A, B, depth, map, my) {
             }
             if (val >= B) {
                 //将这个走法记录到历史表中;
-                //AI.setHistoryTable(txtMap,AI.treeDepth-depth+1,B,my);
+                //Ai.setHistoryTable(txtMap,Ai.treeDepth-depth+1,B,my);
                 return { "key": key, "x": newX, "y": newY, "value": B };
             }
             if (val > A) {
                 A = val; //设置最佳走法;
-                if (AI.treeDepth == depth) var rootKey = { "key": key, "x": newX, "y": newY, "value": A };
+                if (Ai.treeDepth == depth) var rootKey = { "key": key, "x": newX, "y": newY, "value": A };
             }
         }
     }
     //将这个走法记录到历史表中;
-    //AI.setHistoryTable(txtMap,AI.treeDepth-depth+1,A,my);
-    if (AI.treeDepth == depth) {//已经递归回根了
+    //Ai.setHistoryTable(txtMap,Ai.treeDepth-depth+1,A,my);
+    if (Ai.treeDepth == depth) {//已经递归回根了
         if (!rootKey) {
             //AI没有最佳走法，说明AI被将死了，返回false
             return false;
@@ -177,13 +177,13 @@ AI.getAlphaBeta = function (A, B, depth, map, my) {
 }
 
 //奖着法记录到历史表
-AI.setHistoryTable = function (txtMap, depth, value, my) {
-    AI.setHistoryTable.lenght++;
-    AI.historyTable[txtMap] = { depth: depth, value: value }
+Ai.setHistoryTable = function (txtMap, depth, value, my) {
+    Ai.setHistoryTable.lenght++;
+    Ai.historyTable[txtMap] = { depth: depth, value: value }
 }
 
 //评估棋局 取得棋盘双方棋子价值差
-AI.evaluate = function (map, my) {
+Ai.evaluate = function (map, my) {
     var val = 0;
     for (var i = 0; i < map.length; i++) {
         for (var n = 0; n < map[i].length; n++) {
@@ -194,6 +194,6 @@ AI.evaluate = function (map, my) {
         }
     }
     //val+=Math.floor(Math.random()*10);  //让AI走棋增加随机元素
-    AI.number++;
+    Ai.number++;
     return val * my;
 }

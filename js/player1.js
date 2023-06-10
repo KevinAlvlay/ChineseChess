@@ -192,7 +192,7 @@ player1.clickPoint = function (x, y){
 //AI自动走棋
 player1.AIPlay = function (){
     player1.my = -player1.my;
-    var pace=AI.init(player1.pace.join(""));
+    var pace=Ai.init(player1.pace.join(""));
     if (!pace) {
         player1.showWin (1);
     }

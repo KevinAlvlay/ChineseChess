@@ -1,31 +1,31 @@
 ﻿var rule = rule||{};
 
-
 rule.init = function (stype){
     rule.nowStype= stype || rule.getCookie("stype") ||"stype";
-    var stype = rule.stype[rule.nowStype];
-    rule.width			=	stype.width;		//画布宽度
-    rule.height			=	stype.height; 		//画布高度
-    rule.spaceX			=	stype.spaceX;		//着点X跨度
-    rule.spaceY			=	stype.spaceY;		//着点Y跨度
-    rule.pointStartX		=	stype.pointStartX;	//第一个着点X坐标;
-    rule.pointStartY		=	stype.pointStartY;	//第一个着点Y坐标;
-    rule.page			=	stype.page;			//图片目录
+    //var stype = rule.stype[rule.nowStype];
+    rule.width			=	595;		//画布宽度
+    rule.height			=	650; 		//画布高度
+    rule.spaceX			=	62;		    //着点X跨度
+    rule.spaceY			=	62;		    //着点Y跨度
+    rule.pointStartX	=	29; 	    //第一个着点X坐标;
+    rule.pointStartY	=	30;	        //第一个着点Y坐标;
+    //rule.page			=	"stype";			//图片目录
+
     rule.get("box").style.width = rule.width+130+"px";
 
     rule.canvas			=	document.getElementById("chess"); //画布
     rule.ct				=	rule.canvas.getContext("2d") ;
     rule.canvas.width	=	rule.width;
     rule.canvas.height	=	rule.height;
-    rule.cho             =   1;                  //对战人数
+    rule.cho            =   1;                  //对战人数
 
-    rule.childList		=	rule.childList||[];
+    rule.childList		=	rule.childList||[]; //所有子元素集合，用于draw
 
-    rule.loadImages(rule.page);		//载入图片/图片目录
+    rule.loadImages();		//载入图片
 }
 
 //棋盘样式
-rule.stype = {
+/*rule.stype = {
     stype:{
         width:595,		//画布宽度
         height:650, 	//画布高度
@@ -35,11 +35,13 @@ rule.stype = {
         pointStartY:31, //第一个着点Y坐标;
         page:"stype"	//图片目录
     },
-}
+}*/
+
 //获取ID
 rule.get = function (id){
     return document.getElementById(id);
 }
+
 
 rule.sleep = function (millisecond) {
     return new Promise(resolve => {
@@ -49,11 +51,11 @@ rule.sleep = function (millisecond) {
     })
 }
 
-
+//事件处理函数：在页面加载完成后执行的代码，初始化组件
 window.onload = function(){
-    rule.bg=new rule.class.Bg();
-    rule.dot = new rule.class.Dot();
-    rule.pane=new rule.class.Pane();
+    rule.bg=new rule.drawclass.Bg();
+    rule.dot = new rule.drawclass.Dot();
+    rule.pane=new rule.drawclass.Pane();
     rule.pane.isShow=false;
 
     rule.childList=[rule.bg,rule.dot,rule.pane];
@@ -123,7 +125,7 @@ window.onload = function(){
 	//com.getData("js/gambit.all.js",
 	//	function(data){
 	//	com.gambit=data.split(" ");
-	//	AI.historyBill = com.gambit;
+	//	Ai.historyBill = com.gambit;
 	// })
     rule.getData("js/store.json",
         function(data){
@@ -133,7 +135,7 @@ window.onload = function(){
 }
 
 //载入图片
-rule.loadImages = function(stype){
+rule.loadImages = function(){
     //绘制棋盘
     rule.bgImg = new Image();
     rule.bgImg.src  = "img/stype/map.jpg";
@@ -181,7 +183,7 @@ rule.createMans = function(map){
         for (var n=0; n<map[i].length; n++){
             var key = map[i][n];
             if (key){
-                rule.mans[key]=new rule.class.Man(key);
+                rule.mans[key]=new rule.drawclass.Man(key);
                 rule.mans[key].x=n;
                 rule.mans[key].y=i;
                 rule.childList.push(rule.mans[key])
@@ -216,6 +218,7 @@ rule.getCookie = function(name){
     }
     return false;
 }
+
 //二维数组克隆
 rule.arr2Clone = function (arr){
     var newArr=[];
@@ -258,7 +261,7 @@ rule.createMove = function (map, x, y, newX, newY){
         newX=8-newX;
         h += mumTo[8-x];
         if (newY > y) {
-            h+= "退";
+            h+= "退";//马士象可以进退
             if (man.pater == "m" || man.pater == "s" || man.pater == "x"){
                 h += mumTo[newX];
             }else {
@@ -300,6 +303,7 @@ rule.createMove = function (map, x, y, newX, newY){
     return h;
 }
 
+//初始化棋盘位置
 rule.initMap = [
     ['C0','M0','X0','S0','J0','S1','X1','M1','C1'],
     [    ,    ,    ,    ,    ,    ,    ,    ,    ],
@@ -435,9 +439,9 @@ rule.bylaw.s = function (x, y, map, my){
 rule.bylaw.j = function (x, y, map, my){
     var d=[];
     var isNull=(function (y1,y2){
-        var y1=rule.mans["j0"].y;
-        var x1=rule.mans["J0"].x;
-        var y2=rule.mans["J0"].y;
+        var y1=rule.mans["j0"].y;//y坐标
+        var x1=rule.mans["J0"].x;//帅的x坐标，两者一致
+        var y2=rule.mans["J0"].y;//y坐标
         for (var i=y1-1; i>y2; i--){
             if (map[i][x1]) return false;
         }
@@ -452,7 +456,7 @@ rule.bylaw.j = function (x, y, map, my){
         //老将对老将的情况
         if ( rule.mans["j0"].x == rule.mans["J0"].x &&isNull) d.push([rule.mans["J0"].x,rule.mans["J0"].y]);
 
-    }else{
+    }else{       //黑方
         //下
         if ( y+1<= 2  && (!rule.mans[map[y+1][x]] || rule.mans[map[y+1][x]].my!=my)) d.push([x,y+1]);
         //上
@@ -539,22 +543,23 @@ rule.bylaw.z = function (x, y, map, my){
     if (my===1){ //红方
         //上
         if ( y-1>= 0 && (!rule.mans[map[y-1][x]] || rule.mans[map[y-1][x]].my!=my)) d.push([x,y-1]);
-        //右
+        //右，过河情况下才能右走
         if ( x+1<= 8 && y<=4  && (!rule.mans[map[y][x+1]] || rule.mans[map[y][x+1]].my!=my)) d.push([x+1,y]);
-        //左
+        //左，过河情况下才能左走
         if ( x-1>= 0 && y<=4 && (!rule.mans[map[y][x-1]] || rule.mans[map[y][x-1]].my!=my))d.push([x-1,y]);
     }else{
         //下
         if ( y+1<= 9  && (!rule.mans[map[y+1][x]] || rule.mans[map[y+1][x]].my!=my)) d.push([x,y+1]);
-        //右
+        //右，过河情况下才能右走
         if ( x+1<= 8 && y>=6  && (!rule.mans[map[y][x+1]] || rule.mans[map[y][x+1]].my!=my)) d.push([x+1,y]);
-        //左
+        //左，过河情况下才能左走
         if ( x-1>= 0 && y>=6 && (!rule.mans[map[y][x-1]] || rule.mans[map[y][x-1]].my!=my))d.push([x-1,y]);
     }
 
     return d;
 }
 
+//棋子价值
 rule.value = {
 
     //车价值
@@ -673,7 +678,7 @@ rule.value.J = rule.value.j;
 rule.value.P = rule.arr2Clone(rule.value.p).reverse();
 rule.value.Z = rule.arr2Clone(rule.value.z).reverse();
 
-//棋子们
+//绑定棋子
 rule.args={
     //红子 中文/图片地址/阵营/权重
     'c':{text:"车", img:'r_c', my:1 ,bl:"c", value:rule.value.c},
@@ -694,8 +699,8 @@ rule.args={
     'Z':{text:"卒", img:'b_z', my:-1 ,bl:"z", value:rule.value.Z}
 };
 
-rule.class = rule.class || {} //类
-rule.class.Man = function (key, x, y){
+rule.drawclass = rule.drawclass || {} //draw类
+rule.drawclass.Man = function (key, x, y){
     this.pater = key.slice(0,1);
     var o=rule.args[this.pater]
     this.x = x||0;
@@ -725,7 +730,7 @@ rule.class.Man = function (key, x, y){
     }
 }
 
-rule.class.Bg = function (img, x, y){
+rule.drawclass.Bg = function (img, x, y){
     this.x = x||0;
     this.y = y||0;
     this.isShow = true;
@@ -734,7 +739,8 @@ rule.class.Bg = function (img, x, y){
         if (this.isShow) rule.ct.drawImage(rule.bgImg, rule.spaceX * this.x,rule.spaceY *  this.y);
     }
 }
-rule.class.Pane = function (img, x, y){
+
+rule.drawclass.Pane = function (img, x, y){
     this.x = x||0;
     this.y = y||0;
     this.newX = x||0;
@@ -749,7 +755,7 @@ rule.class.Pane = function (img, x, y){
     }
 }
 
-rule.class.Dot = function (img, x, y){
+rule.drawclass.Dot = function (img, x, y){
     this.x = x||0;
     this.y = y||0;
     this.isShow = true;

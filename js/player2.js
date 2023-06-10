@@ -1,17 +1,17 @@
 ﻿var player2 = player2||{};
 
 player2.init = function (){
-    player2.my			=	1;				//玩家方
+    player2.my			    =	1;				//玩家方
     player2.map 			=	rule.arr2Clone (rule.initMap);		//初始化棋盘
     player2.nowManKey		=	false;			//现在要操作的棋子
     player2.pace 			=	[];				//记录每一步
-    player2.isPlay 		=	true ;			//是否能走棋
+    player2.isPlay 		    =	true ;			//是否能走棋
     player2.mans 			=	rule.mans;
-    player2.bylaw 		= 	rule.bylaw;
+    player2.bylaw 		    = 	rule.bylaw;
     player2.show 			= 	rule.show;
     player2.showPane 		= 	rule.showPane;
-    player2.isOffensive	=	true;			//是否先手
-    player2.isFoul	    =	false;	//是否犯规长将
+    player2.isOffensive	    =	true;			//是否先手
+    player2.isFoul	        =	false;	        //是否犯规长将
 
     rule.pane.isShow		=	false;			//隐藏方块
 
