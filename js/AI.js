@@ -1,4 +1,4 @@
-var AI = AI || {};
+﻿var AI = AI || {};
 
 AI.historyTable = {};		//历史表
 

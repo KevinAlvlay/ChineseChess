@@ -1,4 +1,4 @@
-var bill = bill || {};
+﻿var bill = bill || {};
 
 //初始化
 bill.init = function (){

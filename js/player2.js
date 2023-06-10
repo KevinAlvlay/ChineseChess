@@ -1,4 +1,4 @@
-var player2 = player2||{};
+﻿var player2 = player2||{};
 
 player2.init = function (){
     player2.my			=	1;				//玩家方
