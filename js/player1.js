@@ -74,8 +74,11 @@ player1.regret = function (){
         }
     }
     var pace= player1.pace;
+
+    //必须悔棋两步，否则会出一个人重复走两次的bug
     pace.pop();
     pace.pop();
+
 
     for (var i=0; i<pace.length; i++){
         var p= pace[i].split("")
