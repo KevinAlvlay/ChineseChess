@@ -145,10 +145,10 @@ rule.loadImages = function(){
     rule.dotImg.src  = "img/stype/dot.png";
 
     //棋子
-    for (var i in rule.args){
+    for (var i in rule.bind){
         rule[i] = {};
         rule[i].img = new Image();
-        rule[i].img.src = "img/stype/" + rule.args[i].img +".png";
+        rule[i].img.src = "img/stype/" + rule.bind[i].img +".png";
     }
 
     //棋子外框
@@ -679,7 +679,7 @@ rule.value.P = rule.arr2Clone(rule.value.p).reverse();
 rule.value.Z = rule.arr2Clone(rule.value.z).reverse();
 
 //绑定棋子
-rule.args={
+rule.bind={
     //红子 中文/图片地址/阵营/权重
     'c':{text:"车", img:'r_c', my:1 ,bl:"c", value:rule.value.c},
     'm':{text:"马", img:'r_m', my:1 ,bl:"m", value:rule.value.m},
@@ -702,7 +702,7 @@ rule.args={
 rule.drawclass = rule.drawclass || {} //draw类
 rule.drawclass.Man = function (key, x, y){
     this.pater = key.slice(0,1);
-    var o=rule.args[this.pater]
+    var o=rule.bind[this.pater]
     this.x = x||0;
     this.y = y||0;
     this.key = key ;
