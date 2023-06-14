@@ -710,7 +710,7 @@ rule.drawclass.Man = function (key, x, y){
     this.text = o.text;
     this.value = o.value;
     this.isShow = true;
-    this.alpha = 1;
+    this.alpha = 1;//透明度
     this.ps = []; //着点
 
     this.show = function (){
