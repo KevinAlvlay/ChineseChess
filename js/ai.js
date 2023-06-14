@@ -117,7 +117,7 @@ Ai.init = function (pace) {
  * @returns {Object} - 找到的最佳走法及其值。
  */
 Ai.iterativeSearch = function (map, my) {
-    var timeOut = 50;//超时时间
+    var timeOut = 200;//超时时间
     var initDepth = 1;//初始深度
     var maxDepth = 8;//最大深度
     Ai.treeDepth = 0;//当前搜索深度
